@@ -1,0 +1,146 @@
+/*Exercise 1 . The data on visits to doctor’s office are presented 
+below. Use proc sql to complete 
+the assignment that follows.*/
+data docvisits; 
+input patientID$ weekday$5-13 score; 
+cards; 
+101 Friday 15 
+163 Wednesday 11 
+104 Friday 23 
+163 Thursday 13 
+123 Tuesday 10 
+104 Monday 20 
+157 Friday 21 
+101 Monday 10 
+112 Tuesday 11 
+157 Tuesday 10 
+123 Monday 9 
+123 Friday 9 
+101 Tuesday 11 
+112 Monday 9 
+157 Thursday 18 
+174 Monday 12 
+; 
+/*(a) Compute the number of patients.*/
+proc sql;
+select count(distinct patientID)as number_of_patients
+from docvisits;
+quit;
+
+/*(b) List patientIDs and the total number of visits for each patient. */
+proc sql;
+select patientID, count(patientID) as number_of_visits
+ from docvisits
+ group by patientID;
+ 
+quit;
+
+/* c) List the days of the week that visits were on and the total number of 
+patients 
+who visited each 
+day*/
+proc sql; 
+select weekday, count(weekday) as number_of_visits
+from docvisits
+group by patientID;
+quit;
+
+/*Exercise 2.*/ 
+data record;
+input ID$ Gender$ Age Score;
+cards;
+259632 F 56 58 
+259632 F 56 41 
+259632 F 56 39 
+577763 F 67 40 
+577763 F 67 50 
+577763 F 67 39 
+577763 F 67 33 
+279645 M 52 24 
+279645 M 52 65 
+279645 M 52 66 
+279645 M 52 74 
+279645 M 52 85 
+694797 F 48 37 
+694797 F 48 85 
+684516 M 57 81 
+760076 M 62 45 
+760076 M 62 35 
+760076 M 62 38 
+760076 M 62 65 
+745795 F 74 85 
+745795 F 74 82 
+745795 F 74 77 
+745795 F 74 81 
+506301 M 78 70 
+506301 M 78 70 
+506301 M 78 71 
+506301 M 78 67 
+406126 M 62 60 
+406126 M 62 50 
+477908 M 70 50 
+477908 M 70 63 
+477908 M 70 51 
+188994 F 58 43 
+188994 F 58 34 
+; 
+/* (a) How many patients are in this data set? */
+proc sql ; 
+select count(distinct ID) as number_of_patients
+from record; 
+quit; 
+
+/* (b) How many patients by gender?*/
+proc sql; 
+select gender, count( distinct ID) as number_of_patients
+from record
+group by gender;
+quit; 
+
+/* (c) How many patients older than 62? */
+proc sql; 
+select count(*) as npatients
+from record
+where age>62
+; 
+quit;
+
+/* (d) How many women older than 65?*/
+proc sql; 
+select count(*) as patients
+from record
+where gender= 'F' and age>65;
+quit; 
+
+/* (e) How many doctor visits are there for each patient? */
+proc sql; 
+select ID, count(*) as Num_visits
+from record 
+group by ID; 
+quit;
+
+/* (f) How many doctor visits are there for each patient with medical test 
+score above 45? */
+proc sql; 
+select ID, count(*) as Num_visits
+from record
+group by ID
+having Score >45;
+quit; 
+
+/*(g) What are the minimum, average, and maximum scores for each patient? */
+proc sql;
+select ID, mean(score) as min_score, avg(score) as average_score, max(score)
+as max_score
+from record
+group by ID;
+quit;
+
+/* (h) List all patients who have the average scores for all their visits 
+larger than 60?*/
+proc sql; 
+select ID,avg(score)as average_score
+from record
+group by ID
+having average_score >60;
+quit;
